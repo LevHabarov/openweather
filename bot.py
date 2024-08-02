@@ -47,7 +47,7 @@ async def cmd_calclater(message: types.Message, state: FSMContext):
     cities = []
     lat_lon = []
     
-    text = (message.text).replace('/weather', '').strip().replace(' ', ',')
+    text = (message.text).replace('/weather', '').strip()
     contents = openweatherapi.get_geo(text)
     if contents and len(text)>0:
         
@@ -117,9 +117,13 @@ async def weather_query(call: types.CallbackQuery, state: FSMContext):
                                         \n\n\U0001F9CA <b>Мин. температура</b>:\t\t\t{contents["main"]["temp_min"]} \U00002103\
                                         \n\n\U0001F32B <b>Влажность</b>:\t\t\t{contents["main"]["humidity"]} %\
                                         \n\n\U0001F300 <b>Атм. давление</b>:\t\t\t{round(contents["main"]["pressure"] / MM_HG, 2)} мм рт. ст\
-                                        \n\n\U0001F305 <b>Восход</b>:\t\t\t{datetime.fromtimestamp(contents["sys"]["sunrise"]).strftime("%H:%M")}\
-                                        \n\n\U0001F307 <b>Закат</b>:\t\t\t{datetime.fromtimestamp(contents["sys"]["sunset"]).strftime("%H:%M")}',
+                                        \n\n\U0001F305 <b>Восход</b>:\t\t\t{datetime.fromtimestamp(contents["sys"]["sunrise"]).strftime("%Y.%m.%d %H:%M")}\
+                                        \n\n\U0001F307 <b>Закат</b>:\t\t\t{datetime.fromtimestamp(contents["sys"]["sunset"]).strftime("%Y.%m.%d %H:%M")}\
+                                        \n\n\U0001F4A8 <b>Ветер</b>:\t\t\t{contents["wind"]["speed"]} м/с\
+                                        \n\n\U0001F9EDНаправление ветра:\t\t\t{contents["wind"]["deg"]}\U000000B0',
                                         parse_mode=ParseMode.HTML)
+
+        # print(contents)
         
         logger.info(f'[chat_id: {call.message.chat.id, call.message.chat.first_name, call.message.chat.last_name,}] - [action: choosing_mode] - [mode: current] - [city: {contents["name"]}, {contents["sys"]["country"]}]')
         
